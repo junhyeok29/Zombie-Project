@@ -56,8 +56,6 @@ void SceneGame::Update(float dt)
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Space))
 	{
-
-
 		Zombie::Types zombieType = (Zombie::Types)Utils::RandomRange(0, Zombie::TotalTyps);
 		Zombie* zombie = Zombie::Create(zombieType);
 		zombie->Init();
@@ -65,8 +63,26 @@ void SceneGame::Update(float dt)
 		zombie->SetPosition(Utils::RandomInUnitCircle() * 500.f);
 		AddGo(zombie);
 	}
-	
-	
+
+	std::vector<GameObject*> crashzombie;
+	for (auto obj : gameObjects)
+	{
+		Zombie* zombie = dynamic_cast<Zombie*>(obj);
+		if (zombie == obj)
+		{
+			//거리 계산
+			float distance = Utils::Distance(player->GetPosition(), zombie->GetPosition());
+			if (distance < 50.f)
+			{
+				crashzombie.push_back(zombie);
+			}
+		}
+	}
+	for (auto obj : crashzombie)
+	{
+		gameObjects.erase(std::remove(gameObjects.begin(), gameObjects.end(), obj), gameObjects.end());
+		delete obj;
+	}
 	
 }
 
@@ -75,3 +91,26 @@ void SceneGame::Draw(sf::RenderWindow& window)
 	Scene::Draw(window);
 	window.setView(worldView);
 }
+
+
+/*
+std::vector<GameObject*> toRemove;
+	for (auto obj : gameObjects) // gameObjects는 모든 게임 오브젝트를 저장하고 있는 컨테이너
+	{
+		Zombie* zombie = dynamic_cast<Zombie*>(obj);
+		if (zombie != nullptr) // 오브젝트가 좀비인 경우
+		{
+			float distance = Utils::Distance(player->GetPosition(), zombie->GetPosition()); // 플레이어와 좀비 사이의 거리 계산
+			if (distance < 50.f) // someThreshold는 플레이어와 좀비가 충돌했다고 간주하는 거리
+			{
+				toRemove.push_back(zombie); // 삭제 대상에 추가
+			}
+		}
+	}
+	// 충돌한 좀비 제거
+	for (auto obj : toRemove)
+	{
+		gameObjects.erase(std::remove(gameObjects.begin(), gameObjects.end(), obj), gameObjects.end());
+		delete obj; // 메모리 해제
+	}
+	*/

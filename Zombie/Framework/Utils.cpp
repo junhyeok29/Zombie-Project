@@ -97,7 +97,7 @@ sf::Vector2f Utils::GetNormal(const sf::Vector2f& vec)
 	return vec / mag;
 }
 
-float Utils::Distance(const sf::Vector2f& p1, const sf::Vector2f& p2)
+float Utils::Distance(const sf::Vector2f& p1, const sf::Vector2f& p2) 
 {
 	return Magnitude(p2 - p1); 
 	//몬스터와 플레이어의 거리를 구한다.
