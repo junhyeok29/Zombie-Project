@@ -85,7 +85,6 @@ void Utils::Normalize(sf::Vector2f& vec) //정규화
 	if (mag != 0.f)
 	{
 		vec /= mag;
-
 	}
 	//return vec / Magnitude(vec); //0으로 나오면 예외라 예외처리를 해야한다.
 }

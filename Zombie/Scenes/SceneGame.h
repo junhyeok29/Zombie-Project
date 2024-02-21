@@ -1,12 +1,16 @@
 #pragma once
 #include "Scene.h"
 class Player;
+//class Zombie;
 
 class SceneGame : public Scene
 {
 protected:
 
 	Player* player = nullptr;
+	//Zombie* zombie = nullptr;
+
+	
 
 public:
 

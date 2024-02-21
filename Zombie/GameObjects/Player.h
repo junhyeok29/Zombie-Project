@@ -3,9 +3,7 @@
 
 //바라보는 방향 6Vector
 //taget - 시작점 
-/*
-
-*/
+class Zombie;
 class Player : public SpriteGo
 {
 protected:
@@ -15,6 +13,8 @@ protected:
 	float speed = 500.f;
 
 	std::string textureId;
+
+	
 
 public:
 	Player(const std::string& name = "");

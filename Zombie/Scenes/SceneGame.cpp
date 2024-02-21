@@ -56,13 +56,18 @@ void SceneGame::Update(float dt)
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Space))
 	{
-		Zombie::Types zombieType =(Zombie::Types)Utils::RandomRange(0, Zombie::TotalTyps);
+
+
+		Zombie::Types zombieType = (Zombie::Types)Utils::RandomRange(0, Zombie::TotalTyps);
 		Zombie* zombie = Zombie::Create(zombieType);
 		zombie->Init();
 		zombie->Reset();
 		zombie->SetPosition(Utils::RandomInUnitCircle() * 500.f);
 		AddGo(zombie);
 	}
+	
+	
+	
 }
 
 void SceneGame::Draw(sf::RenderWindow& window)

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Player.h"
+#include "Zombie.h"
 
 Player::Player(const std::string& name)
 	:SpriteGo(name)
@@ -24,6 +25,7 @@ void Player::Reset()
 {
 	SpriteGo::Reset();
 }
+
 
 void Player::Update(float dt)
 {
@@ -60,6 +62,8 @@ void Player::Update(float dt)
 	//Utils::Normalize(direction);
 	//position += direction * speed * dt;
 	//sprite.setPosition(position);
+
+	
 
 }
 

@@ -46,6 +46,7 @@ public:
 	bool GetFlipY() const { return isFlipY; }
 	virtual void SetFlipY(bool flip) { isFlipY = flip; }
 
+
 	virtual void Init();
 	virtual void Release();
 
