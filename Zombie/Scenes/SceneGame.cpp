@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "TileMap.h"
 #include "Zombie.h"
+#include "ZombieSpawner.h"
 SceneGame::SceneGame(SceneIds id)
 	:Scene(id)
 {
@@ -10,11 +11,28 @@ SceneGame::SceneGame(SceneIds id)
 
 void SceneGame::Init()
 {
-	AddGo(new TileMap("Background"));
+	
+
+	
+	spawners.push_back(new ZombieSpawner());
+	spawners.push_back(new ZombieSpawner());
+
+	for (auto s : spawners)
+	{
+		s->SetPosition(Utils::RandomOnUnitCircle() *  250.f);
+		AddGo(s);
+	}
 
 	player = new Player("Player");
 	AddGo(player);
+
+	TileMap* tilemap = new TileMap("Background");
+	tilemap->sortLayer = -1;
+	AddGo(tilemap);
+
 	Scene::Init();
+
+
 }
 
 void SceneGame::Release()
@@ -56,33 +74,52 @@ void SceneGame::Update(float dt)
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Space))
 	{
-		Zombie::Types zombieType = (Zombie::Types)Utils::RandomRange(0, Zombie::TotalTyps);
+		TileMap* tilemap = dynamic_cast<TileMap*>(FindGo("Background"));
+		 
+		if (tilemap->sortLayer == 1)
+		{
+			tilemap->sortLayer = -1;
+		}
+
+		else {
+			tilemap->sortLayer = 1;
+		}
+		ResortGo(tilemap);
+		/*Zombie::Types zombieType = (Zombie::Types)Utils::RandomRange(0, Zombie::TotalTyps);
 		Zombie* zombie = Zombie::Create(zombieType);
 		zombie->Init();
 		zombie->Reset();
 		zombie->SetPosition(Utils::RandomInUnitCircle() * 500.f);
-		AddGo(zombie);
+		AddGo(zombie);*/
 	}
 
-	std::vector<GameObject*> crashzombie;
-	for (auto obj : gameObjects)
-	{
-		Zombie* zombie = dynamic_cast<Zombie*>(obj);
-		if (zombie == obj)
-		{
-			//거리 계산
-			float distance = Utils::Distance(player->GetPosition(), zombie->GetPosition());
-			if (distance < 50.f)
-			{
-				crashzombie.push_back(zombie);
-			}
-		}
-	}
-	for (auto obj : crashzombie)
-	{
-		gameObjects.erase(std::remove(gameObjects.begin(), gameObjects.end(), obj), gameObjects.end());
-		delete obj;
-	}
+	//교수님꺼로 수정
+	//std::vector<GameObject*> crashzombie;
+	//for (auto obj : gameObjects)
+	//{
+	//	Zombie* zombie = dynamic_cast<Zombie*>(obj);
+	//	if (zombie == obj)
+	//	{
+	//		//거리 계산
+	//		float distance = Utils::Distance(player->GetPosition(), zombie->GetPosition());
+	//		if (distance < 50.f)
+	//		{
+	//			crashzombie.push_back(zombie);
+	//		}
+	//	}
+	//}
+	//for (auto obj : crashzombie)
+	//{
+	//	//1번
+	//	//gameObjects.remove(obj);
+	//	
+	//	//2번
+	//	RemoveGo(obj);
+
+	//	//3번
+	//	//gameObjects.erase(std::remove(gameObjects.begin(), gameObjects.end(), obj), gameObjects.end());
+	//	//delete obj;
+	//}
 	
 }
 

@@ -25,6 +25,9 @@ protected:
 
 	Player* player;
 	Zombie(const std::string& name = "");
+
+	sf::Vector2f direction; //방향 함수
+
 public:
 	~Zombie() override = default;
 	

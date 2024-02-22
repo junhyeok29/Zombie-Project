@@ -18,6 +18,9 @@ protected:
 	//std::vector<std::list<GameObject*>> gameObjects;
 	std::list<GameObject*> gameObjects;
 	std::list<GameObject*> uiGameObjects;
+
+	std::list<GameObject*> resortingGameObjects; //재정렬 게임 오브젝트
+	std::list<GameObject*> removeGameObjects;
 	 
 	sf::View worldView;
 	sf::View uiView;
@@ -48,6 +51,7 @@ public:
 	virtual int FindGoAll(const std::string& name, std::list<GameObject*>& list, Layers layer = Layers::Everything);
 
 	virtual GameObject* AddGo(GameObject* obj, Layers layer =Layers::World);
+	virtual void ResortGo(GameObject* obj);
 	virtual void RemoveGo(GameObject* obj);
 
 	Scene(const Scene&) = delete;

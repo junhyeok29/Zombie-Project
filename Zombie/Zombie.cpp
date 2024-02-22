@@ -56,11 +56,24 @@ void Zombie::Update(float dt)
 	/*SetPosition(GetPosition() + Utils::GetNormal(player->GetPosition() - GetPosition()) * speed * dt);
 	SetRotation(Utils::Angle(player->GetPosition() - position));*/
 
-
-	sf::Vector2f direction = player->GetPosition() - position;
+	//±³¼ö´Ô²¨
+	direction = player->GetPosition() - position;
 	Utils::Normalize(direction);
 	Translate(direction * speed * dt);
 	SetRotation(Utils::Angle(direction));
+
+
+	//»èÁ¦ÄÚµå
+	/*if (Utils::Distance(position, player->GetPosition()) < 50.f)
+	{
+		SCENE_MGR.GetCurrentScene()->RemoveGo(this);
+	}*/
+
+	//³» ²¨
+	/*sf::Vector2f direction = player->GetPosition() - position;
+	Utils::Normalize(direction);
+	Translate(direction * speed * dt);
+	SetRotation(Utils::Angle(direction));*/
 }
 
 void Zombie::Draw(sf::RenderWindow& window)

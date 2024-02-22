@@ -85,10 +85,77 @@ void Scene::Update(float dt)
 			obj->Update(dt);
 		}
 	}
+
+	for (auto obj : resortingGameObjects)
+	{
+		auto it = std::find(gameObjects.begin(), gameObjects.end(), obj); //이터레이터
+		if (it != gameObjects.end())//찾은 상황
+		{
+			gameObjects.remove(obj);
+			AddGo(obj, Layers::World);
+			continue;
+		}
+		it = std::find(uiGameObjects.begin(), uiGameObjects.end(), obj); //이터레이터
+		if (it != uiGameObjects.end())//찾은 상황
+		{
+			uiGameObjects.remove(obj);
+			AddGo(obj, Layers::Ui);
+			continue;
+		}
+		resortingGameObjects.clear();
+	}
+
+	//모든 업데이트가 끝난 후에 새로운 반복문을 만들어서 지운다.
+	for (auto obj : removeGameObjects)
+	{
+		gameObjects.remove(obj);
+		uiGameObjects.remove(obj);
+		delete obj;
+	}
+	removeGameObjects.clear();
 }
 
 void Scene::Draw(sf::RenderWindow& window)
 {
+	/*gameObjects.sort([](auto a, auto b) {
+		if (a->sortLayer != b->sortLayer)
+		{
+			return a->sortLayer < b->sortLayer;
+		}
+		return a->sortOrder < b->sortOrder;
+		});
+	uiGameObjects.sort([](auto a, auto b) {
+		if (a->sortLayer != b->sortLayer)
+		{
+			return a->sortLayer < b->sortLayer;
+		}
+		return a->sortOrder < b->sortOrder;
+		});*/
+
+	//두줄만 적으면 에러 발생 정렬할 기준이 없기 때문에
+	//람다식 이름없는 함수들  게임오브젝트 안에 들어가있는 애들을 정렬하고 싶은데 
+	//정렬할 기준이 없어서 sort를 람다식으로 정의해서 정렬해줬다.
+	//람다식 정렬을 할 것이다. [](매개변수) {함수 작성}함수 선언
+	//std::sort(gameObjects.begin(), gameObjects.end(),
+	//	[](GameObject* a, GameObject* b) {
+	//		//a < b
+	//		if (a->sortLayer != b->sortLayer)
+	//		{
+	//			return a->sortLayer < b->sortLayer;
+	//		}
+	//		return a->sortOrder < b->sortOrder;
+	//	}); //sort정렬함수
+
+	//std::sort(uiGameObjects.begin(), uiGameObjects.end(), //sort정렬함수
+	//	[](GameObject* a, GameObject* b) {
+	//		//a < b
+	//		if (a->sortLayer != b->sortLayer)
+	//		{
+	//			return a->sortLayer < b->sortLayer;
+	//		}
+	//		return a->sortOrder < b->sortOrder;
+	//	}); //sort정렬함수	
+
 	const sf::View& saveView = window.getView();
 
 	window.setView(worldView);
@@ -132,7 +199,7 @@ GameObject* Scene::FindGo(const std::string& name, Layers layer)
 			}
 		}
 	}
-	
+
 	return nullptr;
 }
 
@@ -159,7 +226,7 @@ int Scene::FindGoAll(const std::string& name, std::list<GameObject*>& list, Laye
 			}
 		}
 	}
-	
+
 	return list.size();
 }
 
@@ -167,26 +234,56 @@ GameObject* Scene::AddGo(GameObject* obj, Layers layer)
 {
 	if (layer == Layers::World)
 	{
+		//이터레이터 순회
 		if (std::find(gameObjects.begin(), gameObjects.end(), obj) == gameObjects.end())
 		{
+			auto it = gameObjects.begin();
+			while (it != gameObjects.end()) //계속 돌면서 넣을 자리 갱신
+			{
+				if (GameObject::CompareDrawOrder(obj, *it))
+				{
+					gameObjects.insert(it, obj);
+					return obj;
+				}
+				++it;
+			}
 			gameObjects.push_back(obj);
 			return obj;
 		}
 	}
 	if (layer == Layers::Ui)
 	{
-		if (std::find(uiGameObjects.begin(), uiGameObjects.end(), obj) == gameObjects.end())
+		if (std::find(uiGameObjects.begin(), uiGameObjects.end(), obj) == uiGameObjects.end())
 		{
-			uiGameObjects.push_back(obj);
+			auto it = uiGameObjects.begin();
+			while (it != uiGameObjects.end()) //계속 돌면서 넣을 자리 갱신
+			{
+				if (GameObject::CompareDrawOrder(obj, *it))
+				{
+					uiGameObjects.insert(it, obj);
+					return obj;
+				}
+				++it;
+			}
+			uiGameObjects.insert(it, obj);
 			return obj;
 		}
 	}
-	
+
 	return nullptr;
+}
+
+void Scene::ResortGo(GameObject* obj)
+{
+	resortingGameObjects.push_back(obj);
 }
 
 void Scene::RemoveGo(GameObject* obj)
 {
-	gameObjects.remove(obj);
-	uiGameObjects.remove(obj);
+	//obj->SetActive(false);
+	removeGameObjects.push_back(obj);
+
+	//1번 2번 3번 코드
+	/*gameObjects.remove(obj);
+	uiGameObjects.remove(obj);*/
 }

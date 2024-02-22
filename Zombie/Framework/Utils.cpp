@@ -87,7 +87,7 @@ void Utils::Normalize(sf::Vector2f& vec) //정규화
 		vec /= mag;
 	}
 	//return vec / Magnitude(vec); //0으로 나오면 예외라 예외처리를 해야한다.
-}
+}// 왔다감 - 괴도-
 
 sf::Vector2f Utils::GetNormal(const sf::Vector2f& vec)
 {
